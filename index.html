@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Courrier client et réclamations : tri, réponse, registre</title>
+<meta name="description" content="Chaque message client trié, une réponse proposée, chaque réclamation suivie jusqu'à sa clôture dans le délai d'un mois.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14213D; --ink2:#3C4A66; --mute:#6B7A90; --line:#E3E8EF; --soft:#F5F7FA;
+  --brand:#0B5D7A; --brand2:#0E9F8E; --brandSoft:#E6F4F2;
+  --crit:#C62828; --critSoft:#FDECEC; --high:#E07B00; --highSoft:#FFF3E0;
+  --norm:#1565C0; --normSoft:#E8F1FC; --low:#5E6B7D; --lowSoft:#EEF1F5;
+  --ok:#2E7D32; --okSoft:#E8F5E9;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;line-height:1.5}
+a{color:var(--brand)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+header.top{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:20}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.01em}
+.logo svg{width:30px;height:30px}
+.logo small{display:block;font-weight:500;color:var(--mute);font-size:12px;letter-spacing:0}
+nav.top a{margin-left:22px;text-decoration:none;color:var(--ink2);font-weight:500;font-size:14px}
+nav.top a:hover{color:var(--brand)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:12px 20px;font:600 15px Inter,sans-serif;cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--brand);color:#fff}
+.btn.primary:hover{background:#094c64}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.small{padding:8px 14px;font-size:13px;border-radius:8px}
+
+/* Hero */
+.hero{padding:56px 0 30px}
+.hero .grid{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:center}
+.eyebrow{display:inline-block;background:var(--brandSoft);color:var(--brand);font-weight:600;font-size:13px;padding:6px 12px;border-radius:999px}
+h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:16px 0 14px}
+.lead{font-size:18px;color:var(--ink2);max-width:620px;margin:0 0 26px}
+.ref{border:1px solid var(--line);border-radius:16px;padding:22px 24px;background:var(--soft)}
+.ref .k{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);font-weight:600}
+.ref .big{font-size:40px;font-weight:800;color:var(--brand);letter-spacing:-.02em;margin:6px 0 2px}
+.ref p{margin:4px 0 0;color:var(--ink2)}
+.ref a{font-size:13px}
+
+/* Steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:34px 0 8px}
+.step{border:1px solid var(--line);border-radius:14px;padding:16px 16px}
+.step b{display:flex;align-items:center;gap:8px;font-size:15px}
+.step .n{width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;display:inline-grid;place-items:center;font-size:13px}
+.step p{margin:6px 0 0;color:var(--mute);font-size:13.5px}
+
+section{padding:40px 0;scroll-margin-top:64px}
+h2{font-size:30px;letter-spacing:-.02em;margin:0 0 6px}
+.sub{color:var(--ink2);margin:0 0 24px;max-width:760px}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.kpi{border:1px solid var(--line);border-radius:16px;padding:24px}
+.kpi .v{font-size:46px;font-weight:800;letter-spacing:-.03em;color:var(--brand2);line-height:1}
+.kpi .l{font-weight:600;margin:10px 0 10px;font-size:16px}
+.kpi .m{font-size:13px;color:var(--mute);border-top:1px dashed var(--line);padding-top:10px}
+.kpi .m b{color:var(--ink2)}
+
+/* Devices */
+.stage{display:grid;grid-template-columns:1fr 300px;gap:34px;align-items:start}
+.laptop{position:relative}
+.laptop .screen{border:12px solid #1d2433;border-bottom-width:16px;border-radius:18px 18px 6px 6px;background:#fff;overflow:hidden;box-shadow:0 30px 60px -30px rgba(20,33,61,.35)}
+.laptop .base{height:14px;background:linear-gradient(#cfd5de,#aab3c0);border-radius:0 0 14px 14px;margin:0 -28px;position:relative}
+.laptop .base:after{content:"";position:absolute;left:50%;top:0;width:110px;height:6px;margin-left:-55px;background:#9aa3b1;border-radius:0 0 8px 8px}
+.appbar{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--soft);font-size:13px}
+.appbar .dots i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;background:#d5dae2}
+.appbar .t{font-weight:600}
+.appbar .cnt{margin-left:auto;color:var(--mute)}
+.app{display:grid;grid-template-columns:340px 1fr;height:600px}
+.inbox{border-right:1px solid var(--line);overflow:auto}
+.filters{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap;position:sticky;top:0;background:#fff;z-index:2}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;font:500 12px Inter,sans-serif;cursor:pointer;color:var(--ink2)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.msg{padding:11px 14px;border-bottom:1px solid var(--line);cursor:pointer;display:grid;grid-template-columns:28px 1fr;gap:10px}
+.msg:hover{background:#FAFBFD}
+.msg.sel{background:var(--brandSoft);box-shadow:inset 3px 0 0 var(--brand)}
+.msg.done .who,.msg.done .subj{color:var(--mute)}
+.ch{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:10.5px;font-weight:700;color:#fff}
+.ch.mail{background:#5470C6}.ch.wa{background:#25A162}.ch.form{background:#8E5BB5}.ch.app{background:#0B5D7A}
+.msg .row1{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.who{font-weight:600}
+.when{color:var(--mute);font-size:12px;white-space:nowrap}
+.subj{font-size:13px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:600;padding:2px 7px;border-radius:6px}
+.u-crit{background:var(--critSoft);color:var(--crit)}.u-high{background:var(--highSoft);color:var(--high)}
+.u-norm{background:var(--normSoft);color:var(--norm)}.u-low{background:var(--lowSoft);color:var(--low)}
+.t-rec{background:#FFF8E1;color:#8D6E00}.t-dem{background:var(--lowSoft);color:var(--low)}.t-pos{background:var(--okSoft);color:var(--ok)}
+.t-done{background:var(--okSoft);color:var(--ok)}
+.detail{overflow:auto;padding:18px 22px}
+.detail h3{margin:0 0 2px;font-size:18px}
+.detail .meta{color:var(--mute);font-size:12.5px;margin-bottom:12px}
+.orig{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13.5px;white-space:pre-wrap;color:var(--ink2)}
+.tri{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.tri div{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.tri span{display:block;font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.tri b{font-size:13.5px;display:block;margin-top:2px}
+.tri small{font-size:11px;color:var(--mute)}
+.why{font-size:12.5px;color:var(--ink2);background:#FFFDF5;border:1px solid #F3E6B3;border-radius:10px;padding:8px 12px;margin-bottom:12px}
+.lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin:6px 0}
+textarea.reply{width:100%;min-height:190px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:13.5px/1.55 Inter,sans-serif;color:var(--ink);resize:vertical}
+.actions{display:flex;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap}
+.okmsg{color:var(--ok);font-size:13px;font-weight:600}
+
+.phone{width:300px;margin:0 auto}
+.phone .body{border:11px solid #1d2433;border-radius:40px;height:600px;overflow:hidden;background:#ECE5DD;position:relative;box-shadow:0 30px 60px -30px rgba(20,33,61,.45)}
+.phone .notch{position:absolute;top:0;left:50%;width:110px;height:22px;margin-left:-55px;background:#1d2433;border-radius:0 0 14px 14px;z-index:3}
+.phone .head{background:#0B5D7A;color:#fff;padding:30px 14px 10px;display:flex;align-items:center;gap:10px}
+.phone .head .av{width:32px;height:32px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.phone .head b{font-size:14px;display:block}.phone .head small{font-size:11px;opacity:.85}
+.phone .chat{padding:12px 10px;height:calc(100% - 74px);overflow:auto;display:flex;flex-direction:column;gap:8px}
+.bub{max-width:85%;padding:8px 10px;border-radius:10px;font-size:12.5px;white-space:pre-wrap;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.bub.in{align-self:flex-end;background:#DCF8C6}
+.bub.out{align-self:flex-start;background:#fff}
+.bub .h{font-size:10.5px;color:var(--mute);margin-top:4px;text-align:right}
+.bub.sys{align-self:center;background:#FFF5C4;font-size:11.5px;text-align:center;max-width:95%}
+.phone.mailmode .body{background:#fff}
+.phone .cap{text-align:center;color:var(--mute);font-size:13px;margin-top:12px}
+
+/* Registre */
+.regtools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.stat{border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:150px}
+.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--mute)}
+.tablewrap{border:1px solid var(--line);border-radius:14px;overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:1020px;font-size:13.5px}
+th{background:var(--ink);color:#fff;text-align:left;font-weight:600;padding:11px 12px;font-size:12.5px;white-space:nowrap}
+td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:middle}
+tr:nth-child(even) td{background:#FBFCFD}
+.stepper{display:flex;gap:3px;align-items:center}
+.stepper i{height:7px;width:26px;border-radius:4px;background:#E3E8EF}
+.stepper i.on{background:var(--brand2)}
+.stepper i.cl{background:var(--ok)}
+.stname{font-size:12px;color:var(--ink2);margin-top:4px;white-space:nowrap}
+.due{white-space:nowrap}
+.due.late{color:var(--crit);font-weight:700}.due.soon{color:var(--high);font-weight:700}
+.adv{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font:600 12px Inter,sans-serif;color:var(--brand);cursor:pointer;white-space:nowrap}
+.adv:disabled{color:var(--ok);cursor:default;border-color:#cfe8d1;background:var(--okSoft)}
+
+/* Essayer */
+.try{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.card{border:1px solid var(--line);border-radius:16px;padding:22px}
+.card textarea{width:100%;min-height:170px;border:1px solid var(--line);border-radius:12px;padding:12px;font:14px/1.5 Inter,sans-serif}
+.card select{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:14px Inter,sans-serif}
+.ex{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 14px}
+#tryOut .empty{color:var(--mute);font-size:14px;text-align:center;padding:60px 10px}
+
+footer{border-top:1px solid var(--line);margin-top:30px;padding:26px 0 40px;color:var(--mute);font-size:13px}
+footer p{margin:4px 0}
+
+@media (max-width:1100px){
+  .stage{grid-template-columns:1fr}
+  .phone{margin-top:10px}
+}
+@media (max-width:820px){
+  .wrap{padding:0 16px}
+  nav.top{display:none}
+  .hero{padding:28px 0 10px}
+  .hero .grid{grid-template-columns:1fr;gap:22px}
+  h1{font-size:31px}
+  .ref .big{font-size:28px}
+  .hero .btn.ghost{margin:10px 0 0 0 !important}
+  .lead{font-size:16px}
+  .steps{grid-template-columns:1fr 1fr}
+  .kpis{grid-template-columns:1fr}
+  h2{font-size:24px}
+  .laptop .screen{border-width:6px;border-bottom-width:8px;border-radius:12px 12px 4px 4px}
+  .laptop .base{margin:0 -10px;height:9px}
+  .app{grid-template-columns:1fr;height:auto}
+  .inbox{max-height:330px;border-right:0;border-bottom:1px solid var(--line)}
+  .detail{padding:14px}
+  .tri{grid-template-columns:1fr 1fr}
+  .try{grid-template-columns:1fr}
+  .phone{width:280px}
+  .phone .body{height:540px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="logo">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0B5D7A"/><path d="M16 6 6 11v2h20v-2L16 6zm-7 9v8h2.5v-8H9zm5 0v8h4v-8h-4zm6.5 0v8H23v-8h-2.5zM7 24.5V26h18v-1.5H7z" fill="#fff"/></svg>
+      <div>Votre banque<small>Relation clientèle · Courrier et réclamations</small></div>
+    </div>
+    <nav class="top">
+      <a href="#cycle">Le cycle</a>
+      <a href="#registre">Registre</a>
+      <a href="#impact">Impact</a>
+      <a href="#essayer" class="btn primary small" style="color:#fff">Essayer</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <span class="eyebrow">Banques et microfinances · UEMOA</span>
+        <h1>Chaque message client trié, une réponse prête, chaque réclamation tenue dans le délai.</h1>
+        <p class="lead">E-mails, WhatsApp, formulaires et application arrivent dans une seule boîte. Chaque message est classé (motif, urgence, agence, échéance), reçoit une réponse proposée que le conseiller valide, et chaque réclamation est suivie dans le registre jusqu'à sa clôture.</p>
+        <a href="#essayer" class="btn primary">Essayer avec votre message</a>
+        <a href="#cycle" class="btn ghost" style="margin-left:8px">Voir le cycle complet</a>
+      </div>
+      <div class="ref">
+        <div class="k">Référence · Crédit Mutuel (France)</div>
+        <div class="big">350 000 e-mails / jour</div>
+        <p>L'analyseur d'e-mails du Crédit Mutuel aide ses conseillers à traiter plus de 350 000 e-mails clients reçus chaque jour, dans 5 000 agences.</p>
+        <p><a href="https://www.prnewswire.com/news-releases/credit-mutuel-and-ibm-watson-put-technology-at-the-service-of-people-300442358.html" target="_blank" rel="noopener">Communiqué Crédit Mutuel et IBM, avril 2017</a></p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><b><span class="n">1</span>Réception</b><p>Tous les canaux dans une seule boîte : e-mail, WhatsApp, formulaire, application.</p></div>
+      <div class="step"><b><span class="n">2</span>Tri</b><p>Motif, urgence, agence et échéance réglementaire posés à l'arrivée.</p></div>
+      <div class="step"><b><span class="n">3</span>Réponse</b><p>Un projet de réponse adapté, que le conseiller relit et valide.</p></div>
+      <div class="step"><b><span class="n">4</span>Registre</b><p>Récépissé, suivi par étapes, alerte avant échéance, clôture.</p></div>
+    </div>
+  </div>
+</div>
+
+<section id="cycle">
+  <div class="wrap">
+    <h2>La boîte de réception, triée</h2>
+    <p class="sub">Cliquez un message : le tri et la réponse proposée s'affichent, et le téléphone montre ce que reçoit le client une fois la réponse validée.</p>
+    <div class="stage">
+      <div class="laptop">
+        <div class="screen">
+          <div class="appbar"><span class="dots"><i></i><i></i><i></i></span><span class="t">Courrier client · lundi 23 novembre 2026</span><span class="cnt" id="cnt"></span></div>
+          <div class="app">
+            <div class="inbox">
+              <div class="filters" id="filters"></div>
+              <div id="list"></div>
+            </div>
+            <div class="detail" id="detail"></div>
+          </div>
+        </div>
+        <div class="base"></div>
+      </div>
+      <div>
+        <div class="phone" id="phone">
+          <div class="body">
+            <div class="notch"></div>
+            <div class="head"><div class="av"><svg viewBox="0 0 32 32" width="20" height="20"><path d="M16 6 6 11v2h20v-2L16 6zm-7 9v8h2.5v-8H9zm5 0v8h4v-8h-4zm6.5 0v8H23v-8h-2.5zM7 24.5V26h18v-1.5H7z" fill="#0B5D7A"/></svg></div><div><b>Votre banque</b><small id="phoneSub">Service client</small></div></div>
+            <div class="chat" id="chat"></div>
+          </div>
+          <div class="cap" id="phoneCap">Côté client</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="registre" style="background:var(--soft)">
+  <div class="wrap">
+    <h2>Le registre des réclamations</h2>
+    <p class="sub">Chaque réclamation reçoit un numéro et un récépissé dès son arrivée ; la date du récépissé fait partir le délai d'un mois. Le registre suit chaque dossier jusqu'à la clôture et alerte sept jours avant l'échéance. Cliquez « Étape suivante » pour faire avancer un dossier.</p>
+    <div class="regtools" id="regstats"></div>
+    <div class="tablewrap" style="background:#fff">
+      <table>
+        <thead><tr><th>N°</th><th>Reçue le</th><th>Client</th><th>Canal</th><th>Motif</th><th>Agence</th><th>Échéance</th><th>Avancement</th><th></th></tr></thead>
+        <tbody id="reg"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="wrap">
+    <h2>Trois chiffres, et d'où ils viennent</h2>
+    <p class="sub">Deux chiffres mesurés chez le Crédit Mutuel, un engagement que le registre rend vérifiable.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="v">60 %</div><div class="l">plus rapide pour trouver la bonne réponse</div><div class="m"><b>Méthode :</b> gain mesuré par le Crédit Mutuel sur le temps que mettent ses conseillers à trouver la bonne réponse avec l'assistant, comparé à la recherche sans assistant. <a href="https://www.ibm.com/fr-fr/case-studies/credit-mutuel" target="_blank" rel="noopener">Étude de cas IBM, Crédit Mutuel</a></div></div>
+      <div class="kpi"><div class="v">50 %</div><div class="l">des e-mails pris en charge par l'analyseur</div><div class="m"><b>Méthode :</b> part des 350 000 e-mails quotidiens que l'analyseur peut orienter ou traiter directement, selon le Crédit Mutuel : le conseiller se concentre sur l'autre moitié. <a href="https://www.ibm.com/fr-fr/case-studies/credit-mutuel" target="_blank" rel="noopener">Étude de cas IBM, Crédit Mutuel</a></div></div>
+      <div class="kpi"><div class="v">100 %</div><div class="l">des réclamations datées et suivies jusqu'à la clôture</div><div class="m"><b>Méthode :</b> tout message classé « réclamation » reçoit à l'arrivée un numéro, un récépissé et son échéance d'un mois ; le registre compte les dossiers ouverts, à moins de sept jours et hors délai. Délai : <a href="https://www.bceao.int/fr/documents/circulaire-ndeg002-2020cbc-du-18-septembre-2020-relative-au-traitement-des-reclamations" target="_blank" rel="noopener">Circulaire n° 002-2020/CB/C de la Commission Bancaire de l'UMOA, art. 6 et 7</a></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="essayer" style="background:var(--soft)">
+  <div class="wrap">
+    <h2>Essayer avec votre message</h2>
+    <p class="sub">Collez un message client, ou choisissez un exemple : il est trié et une réponse est proposée. Rien n'est envoyé ni enregistré hors de cette page.</p>
+    <div class="try">
+      <div class="card">
+        <div class="lbl">Message reçu</div>
+        <div class="ex" id="examples"></div>
+        <textarea id="tryIn" placeholder="Ex. : Bonjour, j'ai fait un retrait de 50 000 FCFA au guichet automatique de Marcory, l'appareil n'a rien donné mais mon compte est débité..."></textarea>
+        <div class="actions">
+          <select id="tryCh"><option value="mail">E-mail</option><option value="wa">WhatsApp</option><option value="form">Formulaire du site</option><option value="app">Application</option></select>
+          <button class="btn primary" id="tryBtn">Trier et proposer une réponse</button>
+        </div>
+      </div>
+      <div class="card" id="tryOut"><div class="empty">Le tri et la réponse proposée s'afficheront ici.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Délai de réponse aux réclamations :</b> un mois au plus à compter de la réception, la date du récépissé faisant foi (Circulaire n° 002-2020/CB/C du 18 septembre 2020 de la Commission Bancaire de l'UMOA, articles 6 et 7, applicable aux établissements de crédit, aux systèmes financiers décentralisés et aux établissements de monnaie électronique). Les demandes qui ne sont pas des réclamations (attestation, relevé) suivent l'engagement de service de la banque.</p>
+    <p><b>Référence :</b> Crédit Mutuel et IBM, communiqué du 20 avril 2017 ; étude de cas IBM « Crédit Mutuel ».</p>
+    <p>Les réponses proposées sont relues et validées par un conseiller avant tout envoi. Numéros de compte et de carte : quatre derniers chiffres seulement.</p>
+  </div>
+</footer>
+
+<script>
+const TODAY = new Date(2026,10,23,10,0);
+const MOIS = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+const pad = n => String(n).padStart(2,"0");
+const fmt = d => pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+d.getFullYear();
+const fmtLong = d => d.getDate()+" "+MOIS[d.getMonth()]+" "+d.getFullYear();
+function plusUnMois(d){const r=new Date(d);const j=r.getDate();r.setMonth(r.getMonth()+1);if(r.getDate()!==j)r.setDate(0);return r;}
+const jours = (a,b) => Math.round((new Date(b.getFullYear(),b.getMonth(),b.getDate())-new Date(a.getFullYear(),a.getMonth(),a.getDate()))/864e5);
+const CH = {mail:["E-mail","@"],wa:["WhatsApp","WA"],form:["Formulaire","F"],app:["Application","AP"]};
+const URG = {crit:["Critique","u-crit"],high:["Haute","u-high"],norm:["Normale","u-norm"],low:["Basse","u-low"]};
+const SIGN = "Le Service Relation Clientèle";
+
+const MSGS = [
+ {id:1,ch:"wa",who:"Adjoua K.",when:new Date(2026,10,23,8,52),subj:"Opérations carte que je n'ai pas faites",
+  text:"Bonjour, je vois sur mon appli 3 paiements par carte que je n'ai jamais faits : 75 000, 120 000 et 98 500 FCFA cette nuit, sur un site internet. Ma carte se termine par 4417 et elle est avec moi. Bloquez vite svp !! Je suis cliente à Cocody Riviera.",
+  type:"rec",motif:"Opération carte contestée (fraude suspectée)",urg:"crit",agence:"Cocody Riviera",
+  why:"Mots repérés : « jamais faits », « bloquez », trois montants carte la même nuit : risque de fraude, opposition à faire immédiatement.",
+  route:"Cellule monétique et fraude",
+  reply:"Bonjour Madame,\n\nMerci de nous avoir alertés aussi vite. Pour votre sécurité, si ce n'est pas déjà fait, faites opposition à votre carte se terminant par 4417 dès maintenant depuis l'application, rubrique « Mes cartes », ou en appelant le service client.\n\nVotre réclamation est enregistrée sous le numéro {num}. Nous analysons les trois paiements que vous contestez (75 000, 120 000 et 98 500 FCFA) et nous vous apportons une réponse au plus tard le {due}. Un formulaire de contestation vous sera demandé : votre agence de Cocody Riviera peut le recevoir dès aujourd'hui.\n\nNous restons joignables sur ce fil pour toute question.\n\n"+SIGN},
+ {id:2,ch:"mail",who:"Ibrahim T.",when:new Date(2026,10,23,8,31),subj:"Retrait GAB : pas de billets mais compte débité",
+  text:"Madame, Monsieur,\nSamedi 21/11 vers 19 h, j'ai voulu retirer 100 000 FCFA au guichet automatique de l'agence Adjamé. L'appareil n'a distribué aucun billet, mais mon compte (se terminant par 0932) est débité de 100 000 FCFA. Je demande le remboursement.\nCordialement,\nIbrahim T.",
+  type:"rec",motif:"Retrait GAB non servi, compte débité",urg:"high",agence:"Adjamé",
+  why:"Montant débité sans contrepartie : rapprochement avec le journal du GAB d'Adjamé du 21/11 à demander.",
+  route:"Monétique (journal GAB)",
+  reply:"Bonjour Monsieur,\n\nNous avons bien reçu votre réclamation concernant le retrait de 100 000 FCFA du samedi 21 novembre au guichet automatique de l'agence Adjamé. Elle est enregistrée sous le numéro {num}.\n\nNous rapprochons dès aujourd'hui votre opération du journal de l'appareil. Si l'écart est confirmé, le montant sera recrédité sur votre compte se terminant par 0932 et vous en serez informé. Dans tous les cas, vous recevrez notre réponse au plus tard le {due}.\n\nVeuillez agréer, Monsieur, nos salutations distinguées.\n\n"+SIGN},
+ {id:3,ch:"form",who:"Serge A.",when:new Date(2026,10,23,7,58),subj:"Ma carte a été avalée par le GAB",
+  text:"Hier soir le GAB de l'agence Yopougon Siporex a avalé ma carte (fin 2208) après le code. Je n'ai plus de carte pour payer. Comment je la récupère ?",
+  type:"rec",motif:"Carte capturée au GAB",urg:"high",agence:"Yopougon Siporex",
+  why:"Client sans moyen de paiement : à traiter dans la journée. Vérifier si la carte a été remontée par le transporteur de fonds.",
+  route:"Agence Yopougon Siporex",
+  reply:"Bonjour Monsieur,\n\nNous sommes désolés pour ce désagrément. Votre carte se terminant par 2208, retenue par le guichet automatique de l'agence Yopougon Siporex, est conservée en sécurité : elle ne peut pas être utilisée par un tiers.\n\nVotre demande est enregistrée sous le numéro {num}. L'agence vous appellera dès que la carte sera disponible ; vous pourrez alors la retirer au guichet sur présentation de votre pièce d'identité. Si la carte ne peut pas vous être rendue, nous vous proposerons son remplacement. Notre réponse vous parviendra au plus tard le {due}.\n\nBien cordialement,\n\n"+SIGN},
+ {id:4,ch:"mail",who:"Mariam D.",when:new Date(2026,10,22,18,40),subj:"Virement de France non reçu",
+  text:"Bonjour,\nMon frère m'a envoyé 850 000 FCFA par virement depuis la France le lundi 16 novembre. Sa banque dit que les fonds sont partis, mais je ne vois rien sur mon compte (fin 7710). J'en ai besoin pour la scolarité des enfants.\nMerci de vérifier.\nMariam D., agence Plateau",
+  type:"rec",motif:"Virement international non reçu",urg:"high",agence:"Plateau",
+  why:"Fonds attendus depuis 7 jours, besoin daté (scolarité) : recherche à lancer auprès du service des opérations internationales.",
+  route:"Opérations internationales",
+  reply:"Bonjour Madame,\n\nNous avons bien reçu votre réclamation concernant le virement de 850 000 FCFA émis depuis la France le lundi 16 novembre. Elle est enregistrée sous le numéro {num}.\n\nNotre service des opérations internationales lance la recherche aujourd'hui. Pour l'accélérer, pouvez-vous nous transmettre, si vous l'avez, l'avis d'opération remis à l'émetteur par sa banque (il porte la référence du virement) ?\n\nNous vous tiendrons informée dès que les fonds seront localisés, et vous recevrez notre réponse au plus tard le {due}.\n\nBien cordialement,\n\n"+SIGN},
+ {id:5,ch:"wa",who:"Koffi B.",when:new Date(2026,10,22,16,12),subj:"3 fois à l'agence pour mon chéquier, toujours rien",
+  text:"C'est la 3e fois que je me déplace à l'agence de Treichville pour mon chéquier commandé en octobre. Chaque fois on me dit revenez demain. Si c'est comme ça je vais fermer mon compte.",
+  type:"rec",motif:"Qualité de service : chéquier non disponible",urg:"high",agence:"Treichville",
+  why:"Menace de clôture du compte et trois déplacements : risque de départ, rappel du client par le directeur d'agence recommandé.",
+  route:"Direction de l'agence Treichville",
+  reply:"Bonjour Monsieur,\n\nVous avez raison d'être mécontent : trois déplacements pour un chéquier, ce n'est pas le service que nous vous devons, et nous vous présentons nos excuses.\n\nVotre réclamation est enregistrée sous le numéro {num}. Le directeur de l'agence de Treichville vérifie aujourd'hui où en est votre chéquier et vous appellera pour vous donner une date de retrait ferme, afin que votre prochain déplacement soit le bon. Notre réponse écrite vous parviendra au plus tard le {due}.\n\n"+SIGN},
+ {id:6,ch:"mail",who:"Ets Kouamé & Fils",when:new Date(2026,10,22,11,5),subj:"Contestation d'un prélèvement",
+  text:"Bonjour,\nUn prélèvement de 45 000 FCFA a été passé le 20/11 sur notre compte (fin 3391) au titre d'un abonnement que nous avons résilié par courrier le 30 septembre (copie jointe). Nous contestons ce prélèvement et demandons son annulation.\nLe gérant",
+  type:"rec",motif:"Contestation de prélèvement",urg:"norm",agence:"Marcory Zone 4",
+  why:"Prélèvement postérieur à une résiliation documentée : vérifier le mandat et l'opposition à poser sur ce créancier.",
+  route:"Back-office prélèvements",
+  reply:"Bonjour Monsieur,\n\nNous avons bien reçu votre contestation du prélèvement de 45 000 FCFA passé le 20 novembre sur votre compte se terminant par 3391, ainsi que la copie de votre courrier de résiliation du 30 septembre. Votre réclamation est enregistrée sous le numéro {num}.\n\nNous vérifions l'autorisation de prélèvement détenue par ce créancier et, à votre demande, nous pouvons bloquer ses prochains prélèvements sur votre compte. Notre réponse vous parviendra au plus tard le {due}.\n\nVeuillez agréer, Monsieur, nos salutations distinguées.\n\n"+SIGN},
+ {id:7,ch:"app",who:"Fatou S.",when:new Date(2026,10,22,9,47),subj:"Transfert vers mon compte mobile money débité, non reçu",
+  text:"J'ai fait un transfert de 30 000 FCFA de mon compte vers mon porte-monnaie mobile money hier à 21h. Le compte est débité, le porte-monnaie n'a rien reçu. Référence de l'opération : TRF-55102.",
+  type:"rec",motif:"Transfert compte vers mobile money non crédité",urg:"high",agence:"Abobo Gare",
+  why:"Référence d'opération fournie : rapprochement automatique possible avec le partenaire mobile money.",
+  route:"Banque à distance",
+  reply:"Bonjour Madame,\n\nMerci pour la référence TRF-55102 : elle nous permet d'aller vite. Votre réclamation concernant le transfert de 30 000 FCFA vers votre porte-monnaie mobile money est enregistrée sous le numéro {num}.\n\nNous vérifions l'opération avec notre partenaire. Si le transfert n'a pas abouti, le montant sera recrédité sur votre compte et vous en serez informée. Notre réponse vous parviendra au plus tard le {due}.\n\nBien cordialement,\n\n"+SIGN},
+ {id:8,ch:"mail",who:"Jean-Marc O.",when:new Date(2026,10,21,15,20),subj:"Frais de tenue de compte injustifiés",
+  text:"Bonjour,\nJe constate sur mon relevé d'octobre des frais de tenue de compte de 6 500 FCFA alors que mon conseiller m'avait dit que mon offre les incluait. Je demande le remboursement de ces frais.\nJean-Marc O., agence Bouaké",
+  type:"rec",motif:"Réclamation sur des frais",urg:"norm",agence:"Bouaké",
+  why:"Écart entre l'offre souscrite et les frais prélevés : vérifier les conditions de l'offre avant toute réponse sur un remboursement.",
+  route:"Agence Bouaké",
+  reply:"Bonjour Monsieur,\n\nNous avons bien reçu votre réclamation concernant les frais de tenue de compte de 6 500 FCFA figurant sur votre relevé d'octobre. Elle est enregistrée sous le numéro {num}.\n\nVotre agence de Bouaké vérifie les conditions de l'offre que vous avez souscrite. Si ces frais n'étaient pas dus, ils vous seront remboursés. Notre réponse vous parviendra au plus tard le {due}.\n\nVeuillez agréer, Monsieur, nos salutations distinguées.\n\n"+SIGN},
+ {id:9,ch:"form",who:"Aminata C.",when:new Date(2026,10,21,10,2),subj:"Dossier de prêt sans nouvelles depuis 3 semaines",
+  text:"J'ai déposé mon dossier de prêt équipement le 30 octobre à l'agence San-Pedro. Depuis, aucune nouvelle malgré deux appels. Je dois confirmer ma commande au fournisseur avant fin novembre.",
+  type:"rec",motif:"Délai de traitement d'un dossier de crédit",urg:"norm",agence:"San-Pedro",
+  why:"Échéance du client (fin novembre) plus proche que le délai réglementaire : donner un point d'étape cette semaine.",
+  route:"Engagements / agence San-Pedro",
+  reply:"Bonjour Madame,\n\nNous comprenons votre impatience, d'autant que vous devez confirmer votre commande avant la fin du mois. Votre réclamation est enregistrée sous le numéro {num}.\n\nNous demandons aujourd'hui à l'agence de San-Pedro et au service des crédits un point précis sur votre dossier déposé le 30 octobre : votre conseiller vous appellera cette semaine pour vous dire où il en est et s'il manque une pièce. Notre réponse écrite vous parviendra au plus tard le {due}.\n\nBien cordialement,\n\n"+SIGN},
+ {id:10,ch:"mail",who:"Yao N.",when:new Date(2026,10,21,9,15),subj:"Demande d'attestation de solde pour visa",
+  text:"Bonjour,\nPourriez-vous m'établir une attestation de solde pour une demande de visa ? Mon rendez-vous à l'ambassade est le 2 décembre.\nYao N., compte fin 5520, agence Plateau",
+  type:"dem",motif:"Demande d'attestation de solde",urg:"low",agence:"Plateau",
+  why:"Demande de document, pas une réclamation : pas d'inscription au registre. Date à tenir : 2 décembre.",
+  route:"Agence Plateau",
+  reply:"Bonjour Monsieur,\n\nNous avons bien reçu votre demande d'attestation de solde. Elle est transmise à votre agence du Plateau, qui la tiendra à votre disposition avant votre rendez-vous du 2 décembre ; elle vous préviendra dès qu'elle sera prête. Pensez à vous munir de votre pièce d'identité pour la retirer.\n\nBien cordialement,\n\n"+SIGN},
+ {id:11,ch:"wa",who:"Paul E.",when:new Date(2026,10,20,17,30),subj:"Relevé de compte et RIB",
+  text:"Bonsoir, je peux avoir mon RIB et le relevé des 3 derniers mois par mail svp ? Mon employeur les demande.",
+  type:"dem",motif:"Demande de RIB et de relevés",urg:"low",agence:"Cocody Angré",
+  why:"Documents disponibles dans l'application : orienter le client et proposer l'envoi par l'agence en complément.",
+  route:"Agence Cocody Angré",
+  reply:"Bonsoir Monsieur,\n\nVotre RIB et vos relevés sont téléchargeables à tout moment dans l'application, rubrique « Mes comptes », puis « Documents ». Si vous préférez, votre agence de Cocody Angré peut vous les envoyer à l'adresse e-mail enregistrée dans votre dossier : répondez simplement « oui » sur ce fil.\n\n"+SIGN},
+ {id:12,ch:"mail",who:"Rokia F.",when:new Date(2026,10,20,12,10),subj:"Merci à votre conseillère d'Angré",
+  text:"Bonjour,\nJe voulais remercier Mme Konaté de l'agence Cocody Angré, qui a réglé en une matinée le problème de ma carte bloquée avant mon voyage. Service impeccable.\nRokia F.",
+  type:"pos",motif:"Remerciement",urg:"low",agence:"Cocody Angré",
+  why:"Retour positif : à transmettre à la conseillère et à son agence ; demander au client s'il accepte que son témoignage soit cité.",
+  route:"Agence Cocody Angré",
+  reply:"Bonjour Madame,\n\nMerci beaucoup pour votre message : nous l'avons transmis à Mme Konaté et à toute l'équipe de l'agence Cocody Angré, qui y seront très sensibles.\n\nAccepteriez-vous que nous citions votre témoignage, avec votre prénom seulement, dans nos agences ? Vous êtes libre de refuser, simplement en répondant à ce message.\n\nBon voyage, et à bientôt,\n\n"+SIGN}
+];
+
+// numérotation et échéances
+let seq = 318;
+MSGS.slice().sort((a,b)=>a.when-b.when).forEach(m=>{ if(m.type==="rec"){ m.num="R-2026-"+String(++seq).padStart(5,"0"); m.due=plusUnMois(m.when);} });
+
+const STEPS = ["Reçue","Récépissé envoyé","En analyse","Réponse envoyée","Clôturée"];
+const REG = [
+ {num:"R-2026-00281",when:new Date(2026,9,12),who:"Hervé G.",ch:"mail",motif:"Réclamation sur des frais",agence:"Plateau",st:4,note:"Frais remboursés"},
+ {num:"R-2026-00289",when:new Date(2026,9,20),who:"Awa Y.",ch:"wa",motif:"Retrait GAB non servi, compte débité",agence:"Yopougon Siporex",st:4,note:"Recrédité"},
+ {num:"R-2026-00297",when:new Date(2026,9,29),who:"SARL Bénié",ch:"mail",motif:"Contestation de prélèvement",agence:"Marcory Zone 4",st:3,note:""},
+ {num:"R-2026-00303",when:new Date(2026,10,2),who:"Lassina O.",ch:"form",motif:"Virement international non reçu",agence:"Treichville",st:2,note:""},
+ {num:"R-2026-00309",when:new Date(2026,10,9),who:"Grâce M.",ch:"app",motif:"Opération carte contestée (fraude suspectée)",agence:"Cocody Riviera",st:2,note:""},
+ {num:"R-2026-00314",when:new Date(2026,10,16),who:"Moussa K.",ch:"wa",motif:"Qualité de service : attente en agence",agence:"Abobo Gare",st:2,note:""}
+];
+MSGS.filter(m=>m.type==="rec").forEach(m=>REG.push({num:m.num,when:m.when,who:m.who,ch:m.ch,motif:m.motif,agence:m.agence,st:1,note:"",msg:m.id}));
+REG.forEach(r=>r.due=plusUnMois(r.when));
+REG.sort((a,b)=>b.when-a.when);
+
+let filter="all", sel=1;
+const done = new Set();
+const typeTag = m => m.type==="rec"?'<span class="tag t-rec">Réclamation</span>':m.type==="dem"?'<span class="tag t-dem">Demande</span>':'<span class="tag t-pos">Remerciement</span>';
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const whenTxt = d => (jours(d,TODAY)===0?"Auj. ":jours(d,TODAY)===1?"Hier ":fmt(d).slice(0,5)+" ")+pad(d.getHours())+":"+pad(d.getMinutes());
+function fill(m){return m.reply.replace("{num}",m.num||"").replace("{due}",m.due?fmtLong(m.due):"");}
+
+function renderFilters(){
+  const F=[["all","Tous"],["crit","Critiques"],["rec","Réclamations"],["dem","Demandes"],["wa","WhatsApp"]];
+  document.getElementById("filters").innerHTML=F.map(([k,l])=>`<button class="chip ${filter===k?"on":""}" data-f="${k}">${l}</button>`).join("");
+  document.querySelectorAll("#filters .chip").forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderList();renderFilters();});
+}
+function pass(m){return filter==="all"||(filter==="crit"&&m.urg==="crit")||(filter==="rec"&&m.type==="rec")||(filter==="dem"&&m.type!=="rec")||(filter==="wa"&&m.ch==="wa");}
+const order={crit:0,high:1,norm:2,low:3};
+function renderList(){
+  const L=MSGS.filter(pass).sort((a,b)=>order[a.urg]-order[b.urg]||b.when-a.when);
+  document.getElementById("list").innerHTML=L.map(m=>`<div class="msg ${m.id===sel?"sel":""} ${done.has(m.id)?"done":""}" data-id="${m.id}">
+    <div class="ch ${m.ch}">${CH[m.ch][1]}</div>
+    <div><div class="row1"><span class="who">${m.who}</span><span class="when">${whenTxt(m.when)}</span></div>
+    <div class="subj">${m.subj}</div>
+    <div class="tags"><span class="tag ${URG[m.urg][1]}">${URG[m.urg][0]}</span>${typeTag(m)}${done.has(m.id)?'<span class="tag t-done">Validée</span>':""}</div></div></div>`).join("");
+  document.querySelectorAll("#list .msg").forEach(e=>e.onclick=()=>{sel=+e.dataset.id;renderList();renderDetail();});
+  const rec=MSGS.filter(m=>m.type==="rec").length;
+  document.getElementById("cnt").textContent=`${MSGS.length} messages · ${rec} réclamations · ${MSGS.filter(m=>m.urg==="crit").length} critique`;
+}
+function delaiBox(m){
+  if(m.type==="rec") return `<div><span>Échéance réglementaire</span><b>${fmt(m.due)}</b><small>1 mois après réception · J-${jours(TODAY,m.due)}</small></div>`;
+  return `<div><span>Délai</span><b>Engagement de service</b><small>Hors registre des réclamations</small></div>`;
+}
+function renderDetail(){
+  const m=MSGS.find(x=>x.id===sel);
+  document.getElementById("detail").innerHTML=`
+    <h3>${m.subj}</h3>
+    <div class="meta">${m.who} · ${CH[m.ch][0]} · reçu le ${fmt(m.when)} à ${pad(m.when.getHours())}:${pad(m.when.getMinutes())}${m.num?` · <b style="color:var(--ink)">${m.num}</b>`:""}</div>
+    <div class="orig">${esc(m.text)}</div>
+    <div class="tri">
+      <div><span>Motif</span><b>${m.motif}</b><small>${m.type==="rec"?"Réclamation":m.type==="dem"?"Demande":"Retour positif"}</small></div>
+      <div><span>Urgence</span><b><span class="tag ${URG[m.urg][1]}">${URG[m.urg][0]}</span></b><small>Orienté vers : ${m.route}</small></div>
+      <div><span>Agence</span><b>${m.agence}</b><small>Agence du client</small></div>
+      ${delaiBox(m)}
+    </div>
+    <div class="why"><b>Pourquoi ce tri :</b> ${m.why}</div>
+    <div class="lbl">Réponse proposée</div>
+    <textarea class="reply" id="reply">${esc(fill(m))}</textarea>
+    <div class="actions">
+      <button class="btn primary small" id="val">${done.has(m.id)?"Réponse validée":"Valider la réponse"}</button>
+      <span class="okmsg" id="ok">${done.has(m.id)?"Validée par le conseiller"+(m.num?", registre mis à jour":""):""}</span>
+    </div>`;
+  document.getElementById("val").onclick=()=>{
+    done.add(m.id);
+    if(m.num){const r=REG.find(x=>x.num===m.num); if(r&&r.st<3) r.st=3;}
+    renderList();renderDetail();renderReg();renderPhone(true);
+  };
+  document.getElementById("detail").scrollTop=0;
+  document.getElementById("reply").oninput=()=>renderPhone(done.has(m.id));
+  renderPhone(done.has(m.id));
+}
+function renderPhone(sent){
+  const m=MSGS.find(x=>x.id===sel);
+  const txt=document.getElementById("reply")?document.getElementById("reply").value:fill(m);
+  const t=pad(m.when.getHours())+":"+pad(m.when.getMinutes());
+  let h="";
+  if(m.ch==="wa"){
+    document.getElementById("phoneSub").textContent="WhatsApp · Service client";
+    h+=`<div class="bub in">${esc(m.text)}<div class="h">${t}</div></div>`;
+    if(m.num) h+=`<div class="bub sys">Réclamation ${m.num} enregistrée. Récépissé envoyé. Réponse au plus tard le ${fmt(m.due)}.</div>`;
+  } else {
+    document.getElementById("phoneSub").textContent=(m.ch==="mail"?"E-mail":m.ch==="app"?"Application":"Formulaire du site")+" · Service client";
+    h+=`<div class="bub in"><b>${esc(m.subj)}</b>\n${esc(m.text.slice(0,140))}${m.text.length>140?"…":""}<div class="h">${t}</div></div>`;
+    if(m.num) h+=`<div class="bub sys">Récépissé ${m.num} · réponse au plus tard le ${fmt(m.due)}</div>`;
+  }
+  if(sent) h+=`<div class="bub out">${esc(txt)}<div class="h">Validée par le conseiller</div></div>`;
+  else h+=`<div class="bub sys">Réponse proposée en attente de validation par le conseiller.</div>`;
+  document.getElementById("chat").innerHTML=h;
+  document.getElementById("phoneCap").textContent=sent?"Ce que reçoit le client":"Côté client, avant validation";
+  const c=document.getElementById("chat"); c.scrollTop=c.scrollHeight;
+}
+function renderReg(){
+  const open=REG.filter(r=>r.st<4), soon=open.filter(r=>jours(TODAY,r.due)<=7&&jours(TODAY,r.due)>=0), late=open.filter(r=>jours(TODAY,r.due)<0);
+  document.getElementById("regstats").innerHTML=`
+    <div class="stat"><b>${REG.length}</b><span>réclamations au registre</span></div>
+    <div class="stat"><b>${open.length}</b><span>en cours</span></div>
+    <div class="stat"><b style="color:var(--high)">${soon.length}</b><span>échéance dans 7 jours ou moins</span></div>
+    <div class="stat"><b style="color:${late.length?"var(--crit)":"var(--ok)"}">${late.length}</b><span>hors délai</span></div>
+    <div class="stat"><b style="color:var(--ok)">${REG.filter(r=>r.st===4).length}</b><span>clôturées</span></div>`;
+  document.getElementById("reg").innerHTML=REG.map((r,i)=>{
+    const d=jours(TODAY,r.due), cl=r.st===4;
+    const dueCls=cl?"":d<0?"late":d<=7?"soon":"";
+    const dueTxt=cl?fmt(r.due):`${fmt(r.due)}<br><small>${d<0?"dépassée de "+(-d)+" j":"dans "+d+" j"}</small>`;
+    const bars=STEPS.map((s,k)=>`<i class="${k<=r.st?(cl?"cl":"on"):""}"></i>`).join("");
+    return `<tr><td><b>${r.num}</b></td><td>${fmt(r.when)}</td><td>${r.who}</td><td>${CH[r.ch][0]}</td><td>${r.motif}</td><td>${r.agence}</td>
+    <td class="due ${dueCls}">${dueTxt}</td>
+    <td><div class="stepper">${bars}</div><div class="stname">${STEPS[r.st]}${r.note?" · "+r.note:""}</div></td>
+    <td><button class="adv" data-i="${i}" ${cl?"disabled":""}>${cl?"Clôturée":"Étape suivante"}</button></td></tr>`;}).join("");
+  document.querySelectorAll("#reg .adv").forEach(b=>b.onclick=()=>{const r=REG[+b.dataset.i]; if(r.st<4){r.st++; if(r.st===4) r.note="Client informé";} renderReg();});
+}
+
+/* ---------- Essayer ---------- */
+const RULES=[
+ {re:/(pas fait|jamais fait|n'ai pas fait|pas reconnu|reconnais pas|fraud|piraté|volé|vol de|usurp)/i,motif:"Opération contestée (fraude suspectée)",type:"rec",urg:"crit",route:"Cellule monétique et fraude",
+  rep:"Pour votre sécurité, si ce n'est pas déjà fait, faites opposition à votre carte dès maintenant depuis l'application ou en appelant le service client. Nous analysons les opérations que vous contestez."},
+ {re:/(aval|captur|retenu).{0,40}(carte)|carte.{0,40}(aval|captur|retenu)/i,motif:"Carte capturée au GAB",type:"rec",urg:"high",route:"Agence du GAB",
+  rep:"Votre carte retenue par le guichet automatique est conservée en sécurité. L'agence vous appellera dès qu'elle sera disponible ; vous pourrez la retirer sur présentation de votre pièce d'identité."},
+ {re:/(gab|guichet automatique|distributeur|retrait).{0,80}(rien|pas de billet|aucun billet|débit)|(débité|debite).{0,60}(gab|guichet|retrait)/i,motif:"Retrait GAB non servi, compte débité",type:"rec",urg:"high",route:"Monétique (journal GAB)",
+  rep:"Nous rapprochons votre opération du journal de l'appareil. Si l'écart est confirmé, le montant sera recrédité sur votre compte et vous en serez informé."},
+ {re:/(mobile money|wallet|porte-monnaie|orange money|momo|wave|moov)/i,motif:"Transfert mobile money non abouti",type:"rec",urg:"high",route:"Banque à distance",
+  rep:"Nous vérifions l'opération avec notre partenaire mobile money. Si le transfert n'a pas abouti, le montant sera recrédité sur votre compte."},
+ {re:/(virement|transfert).{0,80}(pas reçu|non reçu|rien reçu|toujours pas|n'est pas arrivé|ne vois rien)/i,motif:"Virement non reçu",type:"rec",urg:"high",route:"Opérations / virements",
+  rep:"Nous lançons la recherche du virement aujourd'hui. Si vous l'avez, l'avis d'opération remis à l'émetteur par sa banque nous aidera à aller plus vite."},
+ {re:/(prélèvement|prelevement)/i,motif:"Contestation de prélèvement",type:"rec",urg:"norm",route:"Back-office prélèvements",
+  rep:"Nous vérifions l'autorisation de prélèvement détenue par ce créancier et, à votre demande, nous pouvons bloquer ses prochains prélèvements sur votre compte."},
+ {re:/(frais|commission|agios|facturé|tenue de compte)/i,motif:"Réclamation sur des frais",type:"rec",urg:"norm",route:"Agence du client",
+  rep:"Votre agence vérifie les conditions de votre offre. Si ces frais n'étaient pas dus, ils vous seront remboursés."},
+ {re:/(prêt|pret|crédit|credit).{0,60}(dossier|nouvelle|attente|réponse)|dossier de (prêt|crédit)/i,motif:"Délai de traitement d'un dossier de crédit",type:"rec",urg:"norm",route:"Engagements",
+  rep:"Nous demandons aujourd'hui un point précis sur votre dossier ; votre conseiller vous appellera pour vous dire où il en est et s'il manque une pièce."},
+ {re:/(attestation|certificat)/i,motif:"Demande d'attestation",type:"dem",urg:"low",route:"Agence du client",
+  rep:"Votre demande d'attestation est transmise à votre agence, qui vous préviendra dès qu'elle sera prête. Pensez à vous munir de votre pièce d'identité pour la retirer."},
+ {re:/(rib|relevé|releve)/i,motif:"Demande de RIB ou de relevés",type:"dem",urg:"low",route:"Agence du client",
+  rep:"Votre RIB et vos relevés sont téléchargeables à tout moment dans l'application, rubrique « Mes comptes », puis « Documents ». Votre agence peut aussi vous les envoyer."},
+ {re:/(merci|remercie|félicit|bravo|impeccable)/i,motif:"Remerciement",type:"pos",urg:"low",route:"Agence concernée",
+  rep:"Merci beaucoup pour votre message : nous l'avons transmis à l'équipe concernée."},
+ {re:/(attente|attendre|revenez|mal reçu|accueil|impoli|fermer mon compte|clôturer|cloturer|inadmissible|honte)/i,motif:"Qualité de service",type:"rec",urg:"high",route:"Direction de l'agence",
+  rep:"Ce n'est pas le service que nous vous devons, et nous vous présentons nos excuses. Le directeur de votre agence vous appellera pour régler la situation."}
+];
+const AGENCES=["Plateau","Cocody Riviera","Cocody Angré","Riviera","Angré","Yopougon","Treichville","Marcory","Adjamé","Abobo","Koumassi","Port-Bouët","Bingerville","Bouaké","San-Pedro","Yamoussoukro","Daloa","Korhogo","Man","Gagnoa","Abengourou"];
+const EX=[
+ ["Retrait GAB","Bonjour, ce matin j'ai retiré 50 000 FCFA au guichet automatique de Marcory, l'appareil n'a rien donné mais mon compte est débité. Merci de me rembourser."],
+ ["Mobile money","Bonsoir, transfert de 25 000 de mon compte vers mon wallet mobile money, compte débité mais rien reçu depuis hier !"],
+ ["Frais","Je viens de voir 12 000 FCFA de frais sur mon relevé à Daloa, personne ne m'a prévenu. C'est quoi ces frais ?"],
+ ["Attente en agence","Ça fait 2 heures que j'attends à l'agence d'Abobo, on me dit de revenir demain. C'est inadmissible, je vais fermer mon compte."]
+];
+document.getElementById("examples").innerHTML=EX.map((e,i)=>`<button class="chip" data-e="${i}">${e[0]}</button>`).join("");
+document.querySelectorAll("#examples .chip").forEach(b=>b.onclick=()=>{document.getElementById("tryIn").value=EX[+b.dataset.e][1];document.getElementById("tryCh").value=b.dataset.e==="1"||b.dataset.e==="3"?"wa":"mail";classify();});
+document.getElementById("tryBtn").onclick=classify;
+let trySeq=0;
+function classify(){
+  const t=document.getElementById("tryIn").value.trim();
+  const out=document.getElementById("tryOut");
+  if(t.length<8){out.innerHTML='<div class="empty">Écrivez ou collez un message d\'au moins quelques mots.</div>';return;}
+  const ch=document.getElementById("tryCh").value;
+  let r=RULES.find(x=>x.re.test(t))||{motif:"Demande d'information",type:"dem",urg:"low",route:"Agence du client",rep:"Nous avons bien reçu votre message et votre conseiller vous répond dans les meilleurs délais."};
+  let urg=r.urg;
+  if(/(urgent|vite|immédiatement|svp vite|au plus vite)/i.test(t)&&urg==="norm") urg="high";
+  const ag=AGENCES.find(a=>new RegExp(a.replace("-","[- ]?"),"i").test(t))||"Agence du client (à rattacher au compte)";
+  const montants=[...t.matchAll(/(\d{1,3}(?:[ .\u202f]\d{3})+|\d{4,})\s*(?:f\s?cfa|fcfa|f\b|francs)?/gi)].map(x=>x[1]).slice(0,3);
+  const num=r.type==="rec"?"R-2026-"+String(400+(++trySeq)).padStart(5,"0"):null;
+  const due=plusUnMois(TODAY);
+  let reply="Bonjour,\n\nNous avons bien reçu votre message"+(r.type==="rec"?", enregistré comme réclamation sous le numéro "+num:"")+".\n\n"+r.rep+(r.type==="rec"?"\n\nNotre réponse vous parviendra au plus tard le "+fmtLong(due)+".":"")+"\n\nBien cordialement,\n\n"+SIGN;
+  out.innerHTML=`<div class="lbl">Tri</div>
+   <div class="tri" style="grid-template-columns:1fr 1fr">
+    <div><span>Motif</span><b>${r.motif}</b><small>${r.type==="rec"?"Réclamation":r.type==="dem"?"Demande":"Retour positif"} · ${CH[ch][0]}</small></div>
+    <div><span>Urgence</span><b><span class="tag ${URG[urg][1]}">${URG[urg][0]}</span></b><small>Orienté vers : ${r.route}</small></div>
+    <div><span>Agence</span><b>${ag}</b><small>${montants.length?"Montant repéré : "+montants.join(", ")+" FCFA":"Aucun montant repéré"}</small></div>
+    ${r.type==="rec"?`<div><span>Échéance réglementaire</span><b>${fmt(due)}</b><small>1 mois après réception · ${num}</small></div>`:`<div><span>Délai</span><b>Engagement de service</b><small>Hors registre des réclamations</small></div>`}
+   </div>
+   <div class="lbl">Réponse proposée</div>
+   <textarea class="reply">${esc(reply)}</textarea>
+   <p style="font-size:12.5px;color:var(--mute);margin:8px 0 0">La réponse reste à relire et à valider par un conseiller avant envoi.</p>`;
+}
+
+renderFilters();renderList();renderDetail();renderReg();
+</script>
+</body>
+</html>
